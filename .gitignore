@@ -1,0 +1,13 @@
+*.csproj
+VR-part/.vs/
+VR-part/Assets/_TerrainAutoUpgrade/
+VR-part/Assets/_TerrainAutoUpgrade.meta
+
+VR-part/Assets/SteamVR/
+VR-part/Assets/VRTK/
+VR-part/Library/
+VR-part/Logs/
+VR-part/obj/
+VR-part/ProjectSettings/
+VR-part/Assets/SteamVR.meta
+VR-part/Assets/VRTK.meta

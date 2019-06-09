@@ -610,6 +610,8 @@ MonoBehaviour:
   nodes: []
   beams: []
   faces: []
+  material: {fileID: 2100000, guid: c283dcd048b71944c853afbf2337c029, type: 2}
+  vertices: []
 --- !u!4 &432165752
 Transform:
   m_ObjectHideFlags: 0
@@ -618,7 +620,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 432165750}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.7145615, y: 13.553139, z: 4.807357}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

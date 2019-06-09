@@ -12,6 +12,12 @@ public class EventController : MonoBehaviour
     // for debug
    // public LineRenderer line;
 
+    // draw faces
+    public Material material;
+    public List<Vector3> vertices = new List<Vector3>();
+    private MeshRenderer meshRenderer;
+    private MeshFilter meshFilter;
+
      // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +38,7 @@ public class EventController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        vertices.Clear();
         for(int i=0; i<nodes.Count; ++i)
         {
             nodes[i].updateF_axial();
@@ -54,6 +61,7 @@ public class EventController : MonoBehaviour
         {
             nodes[i].updateVel();
             nodes[i].updatePosition();
+            vertices.Add(nodes[i].position);
         }
 
         for(int i=0; i<beams.Count; ++i)
@@ -61,9 +69,38 @@ public class EventController : MonoBehaviour
             beams[i].updateL();
         }
 
-        for(int i=0; i<faces.Count; ++i)
+        Draw();
+    }
+
+    [ContextMenu("Draw")]
+    public void Draw()
+    {
+        // updateVertives();
+        Vector2[] vertices2D = new Vector2[vertices.Count];
+        Vector3[] vertices3D = new Vector3[vertices.Count];
+        for (int i = 0; i < vertices.Count; i++)
         {
-            faces[i].refresh();
+            Vector3 vertice = vertices[i] + transform.position;
+            vertices2D[i] = new Vector2(vertice.x, vertice.y);
+            vertices3D[i] = vertice;
         }
+
+        Triangulator tr = new Triangulator(vertices2D);
+        int[] triangles = tr.Triangulate();
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices3D;
+        mesh.triangles = triangles;
+
+        if (meshRenderer == null)
+        {
+            meshRenderer = gameObject.GetOrAddComponent<MeshRenderer>();
+        }
+        meshRenderer.material = material;
+        if (meshFilter == null)
+        {
+            meshFilter = gameObject.GetOrAddComponent<MeshFilter>();
+        }
+        meshFilter.mesh = mesh;
     }
 }

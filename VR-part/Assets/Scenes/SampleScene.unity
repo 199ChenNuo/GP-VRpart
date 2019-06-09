@@ -606,6 +606,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f04955a6b333d054b8dffafedddf99f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parser: {fileID: 0}
+  nodes: []
+  beams: []
+  faces: []
 --- !u!4 &432165752
 Transform:
   m_ObjectHideFlags: 0
@@ -718,7 +722,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!120 &1283809823
 LineRenderer:
   m_ObjectHideFlags: 0

@@ -18,7 +18,10 @@ public class Node : MonoBehaviour
     public float mass = 1f;
     public float deltaT = 0.1f;
 
+    // for debug
     public GameObject sphere;
+    public GameObject lineobj;
+    public LineRenderer line;
 
 
     public void addBeam(Beam beam)
@@ -31,7 +34,17 @@ public class Node : MonoBehaviour
         position = pos;
         vel = Vector3.zero;
 
-        // sphere = 
+        sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        sphere.transform.position = pos;
+
+        lineobj = new GameObject();
+        line = lineobj.AddComponent<LineRenderer>();
+        // line = GameObject.Find("LineRender").GetComponent<LineRenderer>();
+        // line.positionCount = 6;
+        line.startColor = Color.red;
+        line.endColor = Color.red;
+        line.startWidth = 0.1f;
+        line.endWidth = 0.1f;
     }
 
     public void setIndex(int i)
@@ -60,5 +73,12 @@ public class Node : MonoBehaviour
     {
         position += vel * deltaT;
         sphere.transform.position = position;
+
+        line.positionCount = beams.Count * 2;
+        for(int i=0; i<beams.Count; ++i)
+        {
+            line.SetPosition(i * 2, position);
+            line.SetPosition(i * 2 + 1, beams[i].getOther(this).position);
+        }
     }
 }

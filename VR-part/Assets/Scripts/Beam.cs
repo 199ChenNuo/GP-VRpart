@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Beam : MonoBehaviour
 {
+    public enum type { velly, moutain, facet, boundary, undriven};
     public long index;
     public float k_axial = 0.7f;
 
@@ -18,6 +19,13 @@ public class Beam : MonoBehaviour
     {
         n1 = _n1;
        //  _n1.addBeam(this);
+    }
+
+    public Node getOther(Node n)
+    {
+        if (n == n1)
+            return n2;
+        return n1;
     }
 
     public void setNode2(Node _n2)
@@ -64,6 +72,11 @@ public class Beam : MonoBehaviour
         // ...
         n1.F_dumping = Vector3.zero;
         n2.F_dumping = Vector3.zero;
+    }
+
+    public void updateL()
+    {
+        l = Mathf.Sqrt((n1.position - n2.position).sqrMagnitude);
     }
 
     // Start is called before the first frame update

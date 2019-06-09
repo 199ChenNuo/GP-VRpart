@@ -26,6 +26,11 @@ public class Face : MonoBehaviour
         }
     }
 
+    public void refresh()
+    {
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {

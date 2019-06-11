@@ -22,10 +22,11 @@ public class EventController : MonoBehaviour
     void Start()
     {
         parser = new Parser();
-        parser.parse();
-        nodes = parser.node;
-        beams = parser.beam;
-        faces = parser.face;
+        parser.Parse();
+        parser.Print();
+        nodes = parser.nodes;
+        beams = parser.beams;
+        faces = parser.faces;
 
         // line = GameObject.Find("LineRender").GetComponent<LineRenderer>();
         // line.positionCount = 6;
@@ -69,6 +70,8 @@ public class EventController : MonoBehaviour
             beams[i].updateL();
         }
 
+        // 这部分是画面的，因为mesh是整体一起画的，所以不是 
+        // 很好逐face画，就放到EventController里面整体画了
         Draw();
     }
 

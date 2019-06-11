@@ -24,30 +24,32 @@ public class Node : MonoBehaviour
     public LineRenderer line;
 
 
-    public void addBeam(Beam beam)
+    public void AddBeam(Beam beam)
     {
         beams.Add(beam);
     }
 
-    public void setPosition(Vector3 pos)
+    public void SetPosition(Vector3 pos)
     {
         position = pos;
         vel = Vector3.zero;
 
+        // for debug
+        // node visualization
         sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         sphere.transform.position = pos;
 
+        // for debug
+        // beam visualization
         lineobj = new GameObject();
         line = lineobj.AddComponent<LineRenderer>();
-        // line = GameObject.Find("LineRender").GetComponent<LineRenderer>();
-        // line.positionCount = 6;
         line.startColor = Color.red;
         line.endColor = Color.red;
         line.startWidth = 0.1f;
         line.endWidth = 0.1f;
     }
 
-    public void setIndex(int i)
+    public void SetIndex(int i)
     {
         index = i;
     }
@@ -72,6 +74,8 @@ public class Node : MonoBehaviour
     public void updatePosition()
     {
         position += vel * deltaT;
+
+        // update {node, beam} visualization
         sphere.transform.position = position;
 
         line.positionCount = beams.Count * 2;

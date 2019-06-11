@@ -37,6 +37,7 @@ public class Node : MonoBehaviour
         // for debug
         // node visualization
         sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        sphere.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
         sphere.transform.position = pos;
 
         // for debug
@@ -45,8 +46,8 @@ public class Node : MonoBehaviour
         line = lineobj.AddComponent<LineRenderer>();
         line.startColor = Color.red;
         line.endColor = Color.red;
-        line.startWidth = 0.1f;
-        line.endWidth = 0.1f;
+        line.startWidth = 0.01f;
+        line.endWidth = 0.01f;
     }
 
     public void SetIndex(int i)

@@ -43,11 +43,13 @@ public class Parser : MonoBehaviour
             beam.SetIndex(i);
             beam.SetType(edges_types[i]);
             beam.SetAngel(edges_foldAngles[i]);
-
+            
             int n1 = edges_verts[i].x;
             int n2 = edges_verts[i].y;
             beam.SetNode1(nodes[n1]);
             beam.SetNode2(nodes[n2]);
+            beam.SetL(Vector3.Distance(nodes[n1].position, nodes[n2].position));
+            beam.SetL_0(beam.l);
             nodes[n1].AddBeam(beam);
             nodes[n2].AddBeam(beam);
 

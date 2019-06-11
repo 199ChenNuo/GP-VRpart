@@ -19,7 +19,7 @@ public class Face : MonoBehaviour
 
     public void updateF_face()
     {
-        // ...
+        // TBD
         for(int i=0; i<nodes.Count; ++i)
         {
             nodes[i].F_face = Vector3.zero;

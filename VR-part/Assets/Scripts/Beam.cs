@@ -17,6 +17,7 @@ public class Beam : MonoBehaviour
     public float l;
     public float l_0;
 
+
     public void SetNode1(Node _n1)
     {
         n1 = _n1;
@@ -37,7 +38,7 @@ public class Beam : MonoBehaviour
     }
 
     public void SetNode(Node n){
-        if(n1.index == null)
+        if(n1 == null)
             n1 = n;
         else
             n2 = n;
@@ -100,21 +101,21 @@ public class Beam : MonoBehaviour
 
     public void updateF_crease()
     {
-        // ...
+        // TBD
         n1.F_crease = Vector3.zero;
         n2.F_crease = Vector3.zero;
     }
 
     public void updateF_dumping()
     {
-        // ...
+        // TBD
         n1.F_dumping = Vector3.zero;
         n2.F_dumping = Vector3.zero;
     }
 
     public void updateL()
     {
-        l = Mathf.Sqrt((n1.position - n2.position).sqrMagnitude);
+        l = Vector3.Distance(n1.position, n2.position);
     }
 
 

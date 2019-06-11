@@ -22,11 +22,11 @@ Debug类：`Debug.cs`
 
 1. 在VS中`附加unity调试程序`
 
-   ![1560234955625](C:\Users\31600\AppData\Roaming\Typora\typora-user-images\1560234955625.png)
+   ![1560234955625](.\img\1560234955625.png)
 
 2. 选择unity端口
 
-   ![1560235020858](C:\Users\31600\AppData\Roaming\Typora\typora-user-images\1560235020858.png)
+   ![1560235020858](.\img\1560235020858.png)
 
 3. 在unity中运行项目
 4. 代码会在VS中打的断点停下来，然后就可以去找自己想看的变量值了

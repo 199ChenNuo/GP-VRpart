@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class Parser : MonoBehaviour
 {
-    public string filename = "../Resources/FOLD/flappingBird.fold";
+    public string filename = "Assets/Resources/FOLD/Origami/flappingBird.fold";
     public List<Node> nodes = new List<Node>();
     public List<Beam> beams = new List<Beam>();
     public List<Face> faces = new List<Face>();
+
+    // for draw Mesh
+    public List<Vector3> verts;
+    public List<int> triangles;
 
     private FOLD fold;
     private Debuger debuger = new Debuger();
@@ -22,7 +26,7 @@ public class Parser : MonoBehaviour
         // Step 2: FOLD -> Node/Beam/Face
 
         // parse Nodes
-        List<Vector3> verts = fold.vertices_coords;
+        verts = fold.vertices_coords;
         for (int i = 0; i < verts.Count; i++)
         {
             Vector3 coord = verts[i];
@@ -37,6 +41,7 @@ public class Parser : MonoBehaviour
         List<Vector2Int> edges_verts = fold.edges_verts;
         List<string> edges_types = fold.edges_types;
         List<float> edges_foldAngles = fold.edges_foldAngles;
+        Dictionary<string, int> dics = fold.edges_neighbor_verts;
         for(int i = 0; i < edges_verts.Count; i++)
         {
             Beam beam = new Beam();
@@ -49,15 +54,25 @@ public class Parser : MonoBehaviour
             beam.SetNode1(nodes[n1]);
             beam.SetNode2(nodes[n2]);
             beam.SetL(Vector3.Distance(nodes[n1].position, nodes[n2].position));
-            beam.SetL_0(beam.l);
+            beam.SetL_0(beam.l * 0.9f);
             nodes[n1].AddBeam(beam);
             nodes[n2].AddBeam(beam);
+
+            // face和face交界处的beam的同面相邻点
+            if (beam.type == Beam.Type.Mountain || beam.type == Beam.Type.Valley)
+            {
+                int p1 = dics[n1.ToString() + "," + n2.ToString()];
+                int p2 = dics[n2.ToString() + "," + n1.ToString()];
+                beam.neigh_p1 = nodes[p1];
+                beam.neigh_p2 = nodes[p2];
+            }         
 
             beams.Add(beam);
         }
 
         // parse Faces
         List<Vector3Int> faces_verts = fold.faces_verts;
+        triangles = new List<int>(faces_verts.Count * 3);
         for(int i = 0; i < faces_verts.Count; i++)
         {
             Face face = new Face();
@@ -69,6 +84,10 @@ public class Parser : MonoBehaviour
             face.SetAlpha_0();
 
             faces.Add(face);
+
+            triangles.Add(ids.x);
+            triangles.Add(ids.y);
+            triangles.Add(ids.z);
         }
 
         Debug.Log("parse Success!");

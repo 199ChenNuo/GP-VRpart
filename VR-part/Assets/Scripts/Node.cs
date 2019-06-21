@@ -13,10 +13,12 @@ public class Node : MonoBehaviour
     public Vector3 F_face = new Vector3();
     public Vector3 F_dumping = new Vector3();
 
+    public float F_total;
+
     public Vector3 vel = new Vector3();
     public Vector3 position = new Vector3();
     public float mass = 1f;
-    public float deltaT = 0.1f;
+    public float deltaT = 0.01f;
 
     // for debug
     public GameObject sphere;
@@ -68,6 +70,7 @@ public class Node : MonoBehaviour
     public void updateVel()
     {
         Vector3 F = F_axial + F_crease + F_dumping + F_face;
+        F_total = F.sqrMagnitude;
         Vector3 a = F / mass;
         vel += a * deltaT;
     }

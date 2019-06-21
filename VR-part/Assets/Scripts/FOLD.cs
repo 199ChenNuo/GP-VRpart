@@ -10,6 +10,7 @@ public class FOLD
     public List<string> edges_types;
     public List<Vector3Int> faces_verts;
     public List<float> edges_foldAngles;
+    public Dictionary<string, int> edges_neighbor_verts;
 
     private StreamReader file;
 
@@ -74,6 +75,7 @@ public class FOLD
     private void ParseFaceVert()
     {
         List<Vector3Int> fVerts = new List<Vector3Int>();
+        Dictionary<string, int> dics = new Dictionary<string, int>();
         string l;
         while ((l = file.ReadLine().Trim()) != "],")
         {
@@ -91,8 +93,13 @@ public class FOLD
             v3 = int.Parse(v3_str);
 
             fVerts.Add(new Vector3Int(v1, v2, v3));
+
+            dics.Add(v1_str + "," + v2_str, v3);
+            dics.Add(v2_str + "," + v3_str, v1);
+            dics.Add(v3_str + "," + v1_str, v2);
         }
         faces_verts = fVerts;
+        edges_neighbor_verts = dics;
         
     }
     private void ParseFoldAngle()

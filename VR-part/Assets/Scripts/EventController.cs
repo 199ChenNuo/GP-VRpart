@@ -12,20 +12,29 @@ public class EventController : MonoBehaviour
     // for debug
 
     // draw faces
-    public Material material;
+    /*public Material material;
     public List<Vector3> vertices = new List<Vector3>();
     private MeshRenderer meshRenderer;
-    private MeshFilter meshFilter;
+    private MeshFilter meshFilter;*/
 
-     // Start is called before the first frame update
+    public MeshController meshController;
+    public List<Vector3> vertices;
+    private List<float> forces;
+
+    // Start is called before the first frame update
     void Start()
     {
         parser = new Parser();
         parser.Parse();
-        parser.Print();
+        //parser.Print();
         nodes = parser.nodes;
         beams = parser.beams;
         faces = parser.faces;
+
+        //meshController = GetComponent<MeshController>();
+        vertices = parser.verts;
+        forces = new List<float>(vertices.Count);
+        meshController.CreateMesh(vertices, parser.triangles);
 
     }
 
@@ -56,11 +65,13 @@ public class EventController : MonoBehaviour
 
         // 更新Node位置及速度
         vertices.Clear();
+        forces.Clear();
         for (int i=0; i<nodes.Count; ++i)
         {
             nodes[i].updateVel();
             nodes[i].updatePosition();
             vertices.Add(nodes[i].position);
+            forces.Add(nodes[i].F_total);
         }
 
         // 更新Beam长度
@@ -72,11 +83,15 @@ public class EventController : MonoBehaviour
         // 更新Face
         // 有点问题 TBD
         // Draw();
+        //meshController.NormalVisulization();
+        meshController.ForceVisulization(forces);
+        meshController.UpdateMesh(vertices);
     }
 
+    /*
     [ContextMenu("Draw")]
     public void Draw()
-    {
+    { 
         // updateVertives();
         Vector2[] vertices2D = new Vector2[vertices.Count];
         Vector3[] vertices3D = new Vector3[vertices.Count];
@@ -105,4 +120,5 @@ public class EventController : MonoBehaviour
         }
         meshFilter.mesh = mesh;
     }
+    */
 }

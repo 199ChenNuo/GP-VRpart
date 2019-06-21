@@ -8,10 +8,13 @@ public class Beam : MonoBehaviour
     public long index;
     public float k_axial = 0.7f;
 
-    public Node n1 = new Node();
-    public Node n2 = new Node();
+    public Node n1 = new Node();        //p3
+    public Node n2 = new Node();        //p4
     public Type type;
     public float angle;
+
+    public Node neigh_p1 = new Node();  //p1
+    public Node neigh_p2 = new Node();  //p2
 
     // length
     public float l;

@@ -1,21 +1,34 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 public class MeshController : MonoBehaviour
 {
     public Material material;
-    public float maxForce = 1.0f;
     public Shader vertShader;
     public Shader normalShader;
 
+    public enum Type{
+        Material,
+        Strain,
+        Normal
+    }
 
+    public Type displayType;
+    public Gradient gradient;
+
+    // render mesh
     private MeshRenderer meshRenderer;
     private MeshFilter meshfilter;
     private Mesh mesh;
 
     private List<Color> colors;
+
+    // export obj
+    private StreamWriter file;
+    private string path = "Assets/Resources/Obj/";
 
     private void Awake()
     {
@@ -27,7 +40,7 @@ public class MeshController : MonoBehaviour
     }
     void Start()
     {
-               
+       
     }
 
     public void CreateMesh(List<Vector3> verts, List<int> triangles)
@@ -40,40 +53,65 @@ public class MeshController : MonoBehaviour
         meshfilter.mesh = mesh;
     }
 
-    public void UpdateMesh(List<Vector3> verts)
+    public void UpdateMesh(List<Vector3> verts, List<float> forces)
     {
+        if (displayType == Type.Normal)
+        {
+            NormalVisulization();
+        }
+        else if(displayType == Type.Strain)
+        {
+            ForceVisulization(forces);
+        }
+
         mesh.SetVertices(verts);
         mesh.RecalculateNormals();
-        meshfilter.mesh = mesh;
-        
+        meshfilter.mesh = mesh;        
     }
 
-    public void ForceVisulization(List<float> forces)
+    private void ForceVisulization(List<float> forces)
     {
         colors.Clear();
         foreach(float f in forces){
-            /*if (f < 0.33 * maxForce)
-            {
-                colors.Add(Color.Lerp(Color.blue, Color.green, f*0.33f));
-            }
-            else if (f < 0.66 * maxForce)
-            {
-                colors.Add(Color.Lerp(Color.green, Color.yellow, f*0.66f));
-            }*/
-
-            colors.Add(Color.Lerp(Color.yellow, Color.red, f));
-            
-
+        
+            colors.Add(gradient.Evaluate(f));
         }
         mesh.SetColors(colors);
         material.shader = vertShader;
     }
 
-    public void NormalVisulization()
+    private void NormalVisulization()
     {
         material.shader = normalShader;           
         
     }
 
+    public void Export(string filename)
+    {
+        string[] tmp = filename.Split('/');
+        filename = path + tmp[tmp.Length - 1].Split('.')[0] + ".obj";
+        file = new StreamWriter(filename);
+
+        Debug.Log("export OBJ: " + filename);
+
+        // material file
+        file.WriteLine("mtllib model.mtl");
+
+        // vertices
+        foreach (Vector3 v in mesh.vertices)
+        {
+            file.WriteLine("v " + v.x.ToString() + " " + v.y.ToString() + " " + v.z.ToString());
+        }
+
+        // faces
+        for (int i = 0; i < mesh.vertexCount; i++)
+        {
+            file.WriteLine("f " + mesh.triangles[i * 3].ToString() + " " + mesh.triangles[i * 3 + 1].ToString() + " " + mesh.triangles[i * 3 + 2].ToString());
+        }
+
+        file.Close();
+
+        Debug.Log("export OBJ OVER! ");
+    }
 
 }

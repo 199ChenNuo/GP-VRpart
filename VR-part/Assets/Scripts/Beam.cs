@@ -190,9 +190,18 @@ public class Beam : MonoBehaviour
 
     public void updateF_dumping()
     {
-        // TBD
-        p3.F_dumping = Vector3.zero;
-        p4.F_dumping = Vector3.zero;
+        //previous defination
+        float zeta = 0.1f;     //0.01~0.5
+        float c = 2 * zeta * Mathf.Sqrt(k_axial*p3.mass);//mass=1
+
+        // get velocity 
+        // here simply use the other node of the beam as the neighbour node
+        Vector3 v3 = p3.vel;
+        Vector3 v4 = p4.vel;
+
+        //F_dumping
+        p3.F_dumping = c * (v4 - v3);
+        p4.F_dumping = c * (v3 - v4); 
 
         // 那个字母叫zeta
     }

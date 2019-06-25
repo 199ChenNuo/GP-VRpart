@@ -68,15 +68,6 @@ public class EventController : MonoBehaviour
         {
             beams[i].updateL();
         }
-
-        // 更新Face
-        // 有点问题 TBD
-        /*
-        for(int i=0; i<faces.Count; ++i)
-        {
-            // faces[i].Draw();
-        }
-        */
     }
 
    

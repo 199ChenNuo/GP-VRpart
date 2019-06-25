@@ -16,7 +16,7 @@ public class Node : MonoBehaviour
     public Vector3 vel = new Vector3();
     public Vector3 position = new Vector3();
     public float mass = 1f;
-    public float deltaT = 0.01f;
+    public float deltaT = 0.001f;
 
     // for debug
     public GameObject sphere;

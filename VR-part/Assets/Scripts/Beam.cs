@@ -92,22 +92,28 @@ public class Beam : MonoBehaviour
 
     public void SetTheta(float a)
     {
-        while (a < 0)
-            a += 180f;
-        while (a > 180f)
-            a -= 180f;
-        theta = a;
+        if (this.type == Type.Mountain)
+            theta = a > 0 ? a - 180f : a;
+        else if (this.type == Type.Valley)
+            theta = a > 0 ? a : a + 180f;
+        else
+            theta = 0;
     }
 
     public void SetThetaTarget(float a)
     {
-        while (a < 0)
-            a += 180f;
-        while (a > 180f)
-            a -= 180f;
-        theta_target = a;
+        // <0   mountain crease
+        // >0   valley crease
+        // 0      facet crease
+        if (this.type == Type.Mountain)
+            theta_target = a > 0 ? a - 180f : a;
+        else if (this.type == Type.Valley)
+            theta_target = a > 0 ? a : a + 180f;
+        else
+            theta_target = 0;
     }
 
+    // k_crease is also set in this function
     public void SetType(string s)
     {
         if (s == "\"B\"")

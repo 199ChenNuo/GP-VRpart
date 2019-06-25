@@ -611,7 +611,6 @@ MonoBehaviour:
   beams: []
   faces: []
   material: {fileID: 2100000, guid: c283dcd048b71944c853afbf2337c029, type: 2}
-  vertices: []
 --- !u!4 &432165752
 Transform:
   m_ObjectHideFlags: 0

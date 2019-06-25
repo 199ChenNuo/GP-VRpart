@@ -55,8 +55,8 @@ public class Debuger
         foreach (Beam beam in beams)
         {
             string log = "Beam " + beam.index + "\n";
-            log += "\tfrom [Node " + beam.n1.index + "] to [Node " + beam.n2.index + "]\n";
-            log += "\tangle: " + beam.angle.ToString();
+            log += "\tfrom [Node " + beam.p3.index + "] to [Node " + beam.p4.index + "]\n";
+            log += "\tangle: " + beam.theta.ToString();
             log += "\ttype: " + types[(int)beam.type];            
             log += "\n";
             Debug.Log(log);

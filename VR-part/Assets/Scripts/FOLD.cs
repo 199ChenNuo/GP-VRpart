@@ -162,6 +162,8 @@ public class FOLD
                 continue;
             }
         }
+
+        file.Close();
     }
 
 

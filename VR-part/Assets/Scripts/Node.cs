@@ -16,13 +16,22 @@ public class Node : MonoBehaviour
     public Vector3 vel = new Vector3();
     public Vector3 position = new Vector3();
     public float mass = 1f;
-    public float deltaT = 0.001f;
+
+    public float deltaT = 0.01f;
+
+    public float F_total;
+
 
     // for debug
     public GameObject sphere;
     public GameObject lineobj;
     public LineRenderer line;
 
+    public void Clear()
+    {
+        Destroy(sphere);
+        Destroy(lineobj);
+    }
 
     public void AddBeam(Beam beam)
     {
@@ -76,6 +85,7 @@ public class Node : MonoBehaviour
     public void updateVel()
     {
         Vector3 F = F_axial + F_crease + F_dumping + F_face;
+        F_total = F.sqrMagnitude;
         Vector3 a = F / mass;
         vel += a * deltaT;
         // Debug.Log("====== node: " + index + " ======");

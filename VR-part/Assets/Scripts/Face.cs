@@ -226,4 +226,45 @@ public class Face : MonoBehaviour
         }
     }
 
+    [ContextMenu("Draw")]
+    public void Draw()
+    {
+        updateVertives();
+        Vector2[] vertices2D = new Vector2[vertices.Count];
+        Vector3[] vertices3D = new Vector3[vertices.Count];
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            // Vector3 vertice = vertices[i];
+            vertices2D[i] = new Vector2(vertices[i].x, vertices[i].y);
+            vertices3D[i] = vertices[i];
+        }
+
+        Triangulator tr = new Triangulator(vertices2D);
+        int[] triangles = tr.Triangulate();
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices3D;
+        mesh.triangles = triangles;
+
+        if (meshRenderer == null)
+        {
+            meshRenderer = gameObject.GetOrAddComponent<MeshRenderer>();
+        }
+        meshRenderer.material = material;
+        if (meshFilter == null)
+        {
+            meshFilter = gameObject.GetOrAddComponent<MeshFilter>();
+        }
+        meshFilter.mesh = mesh;
+    }
+
+    public void updateVertives()
+    {
+        vertices.Clear();
+        for(int i=0; i<nodes.Count; ++i)
+        {
+            vertices.Add(nodes[i].position);
+        }
+    }
+
 }

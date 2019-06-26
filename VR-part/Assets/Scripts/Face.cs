@@ -161,7 +161,8 @@ public class Face : MonoBehaviour
     {
         Vector3 numerator = Vector3.Cross(n, p1 - p2);
         float denominator = Vector3.Distance(p1, p2);
-        return numerator / (denominator * denominator);
+        Vector3 tmp = numerator / (denominator * denominator);
+        return new Vector3(1 / tmp.x, 1 / tmp.y, 1 / tmp.z);
     }
 
     // p2 and alpha2_31
@@ -171,7 +172,8 @@ public class Face : MonoBehaviour
         float denominator1 = Vector3.Distance(p1, p2);
         Vector3 numerator2 = Vector3.Cross(n, p3 - p2);
         float denominator2 = Vector3.Distance(p3, p2);
-        return -numerator1 / (denominator1 * denominator1) + numerator2 / (denominator2 * denominator2);
+        Vector3 tmp = -numerator1 / (denominator1 * denominator1) + numerator2 / (denominator2 * denominator2);
+        return new Vector3(1 / tmp.x, 1 / tmp.y, 1 / tmp.z);
     }
 
     // p3 and alpha2_31
@@ -179,7 +181,49 @@ public class Face : MonoBehaviour
     {
         Vector3 numerator = Vector3.Cross(n, p3 - p2);
         float denominator = Vector3.Distance(p3, p2);
-        return -numerator / (denominator * denominator);
+        Vector3 tmp = -numerator / (denominator * denominator);
+        return new Vector3(1 / tmp.x, 1 / tmp.y, 1 / tmp.z);
+    }
+
+    [ContextMenu("Draw")]
+    public void Draw()
+    {
+        updateVertives();
+        Vector2[] vertices2D = new Vector2[vertices.Count];
+        Vector3[] vertices3D = new Vector3[vertices.Count];
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            // Vector3 vertice = vertices[i];
+            vertices2D[i] = new Vector2(vertices[i].x, vertices[i].y);
+            vertices3D[i] = vertices[i];
+        }
+
+        Triangulator tr = new Triangulator(vertices2D);
+        int[] triangles = tr.Triangulate();
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices3D;
+        mesh.triangles = triangles;
+
+        if (meshRenderer == null)
+        {
+            meshRenderer = gameObject.GetOrAddComponent<MeshRenderer>();
+        }
+        meshRenderer.material = material;
+        if (meshFilter == null)
+        {
+            meshFilter = gameObject.GetOrAddComponent<MeshFilter>();
+        }
+        meshFilter.mesh = mesh;
+    }
+
+    public void updateVertives()
+    {
+        vertices.Clear();
+        for(int i=0; i<nodes.Count; ++i)
+        {
+            vertices.Add(nodes[i].position);
+        }
     }
 
     [ContextMenu("Draw")]

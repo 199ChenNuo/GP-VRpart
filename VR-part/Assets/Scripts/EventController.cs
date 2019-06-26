@@ -13,10 +13,12 @@ public class EventController : MonoBehaviour
     // for debug
 
     // draw faces
+
     // public Material material;
     public MeshController meshController;
     public List<Vector3> vertices;
     private List<float> forces;
+
 
     private bool parsedone = false;
 
@@ -38,8 +40,21 @@ public class EventController : MonoBehaviour
 
     public void Load(string filename)
     {
+
         parsedone = false;
         if(parser != null)
+
+        // 计算 F_axial
+        for(int i=0; i<nodes.Count; ++i)
+        {
+            // 顺便把上一次update计算的各种力清空
+            nodes[i].ClearF();
+            nodes[i].updateF_axial();
+        }
+
+        // 计算 F_crease
+        // 计算 F_dumping
+        for(int i=0; i<beams.Count; ++i)
         {
             parser.Clear();
         }
@@ -59,10 +74,12 @@ public class EventController : MonoBehaviour
         meshController.CreateMesh(vertices, parser.triangles);
         parsedone = true;
     }
+    
     public void Export()
     {
         meshController.Export(parser.filename);
     }
+    
     // Update is called once per frame
     void Update()
     {
@@ -123,6 +140,7 @@ public class EventController : MonoBehaviour
         }
         
     }
+
 
    
 }

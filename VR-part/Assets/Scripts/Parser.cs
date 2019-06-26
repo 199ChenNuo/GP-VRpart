@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Parser 
 {
+
     public string filename = "Assets/Resources/FOLD/Origami/flappingBird.fold";
+
     public List<Node> nodes = new List<Node>();
     public List<Beam> beams = new List<Beam>();
     public List<Face> faces = new List<Face>();
@@ -55,19 +57,27 @@ public class Parser
         List<string> edges_types = fold.edges_types;
         List<float> edges_foldAngles = fold.edges_foldAngles;
         Dictionary<string, int> dics = fold.edges_neighbor_verts;
+
         for (int i = 0; i < edges_verts.Count; i++)
         {
             Beam beam = new Beam();
             beam.SetIndex(i);
-            beam.SetType(edges_types[i]);
-            beam.SetTheta(edges_foldAngles[i]);
 
             int n1 = edges_verts[i].x;
             int n2 = edges_verts[i].y;
             beam.SetNode1(nodes[n1]);
             beam.SetNode2(nodes[n2]);
+            // for visualization
+            //beam.SetL(Vector3.Distance(nodes[n1].position, nodes[n2].position) * 1.1f);
             beam.SetL(Vector3.Distance(nodes[n1].position, nodes[n2].position));
-            beam.SetL_0(beam.l * 0.9f);
+
+            beam.SetL_0(beam.l);
+            // set type should be after set l
+            // because in set type, we will use l
+            beam.SetType(edges_types[i]);
+            beam.SetThetaTarget(edges_foldAngles[i]);
+            beam.SetTheta(0);
+
             nodes[n1].AddBeam(beam);
             nodes[n2].AddBeam(beam);
 
@@ -76,6 +86,7 @@ public class Parser
             {
                 int p1 = dics[n1.ToString() + "," + n2.ToString()];
                 int p2 = dics[n2.ToString() + "," + n1.ToString()];
+
                 beam.neigh_p1 = nodes[p1];
                 beam.neigh_p2 = nodes[p2];
             }
@@ -94,6 +105,7 @@ public class Parser
             face.AddNode(nodes[ids.x]);
             face.AddNode(nodes[ids.y]);
             face.AddNode(nodes[ids.z]);
+
             face.SetAlpha_0();
 
             faces.Add(face);

@@ -91,15 +91,26 @@ public class Beam : MonoBehaviour
     }
 
     public void SetTheta(float a)
+
     {
         theta = a;
     }
 
+
     public void SetThetaTarget(float a)
     {
-        theta_target = a;
+        // <0   mountain crease
+        // >0   valley crease
+        // 0      facet crease
+        if (this.type == Type.Mountain)
+            theta_target = a > 0 ? a - 180f : a;
+        else if (this.type == Type.Valley)
+            theta_target = a > 0 ? a : a + 180f;
+        else
+            theta_target = 0;
     }
 
+    // k_crease is also set in this function
     public void SetType(string s)
     {
         if (s == "\"B\"")
@@ -157,19 +168,20 @@ public class Beam : MonoBehaviour
         // height of two faces
         float h1 = DisPoint2Line(neigh_p1.position, p3.position, p4.position);
         float h2 = DisPoint2Line(neigh_p2.position, p3.position, p4.position);
-        
+
         // normal of 2 faces
-        Vector3 n1 = Vector3.Cross(p3.position - neigh_p1.position, p4.position - neigh_p1.position);
-        Vector3 n2 = Vector3.Cross(p3.position - neigh_p2.position, p4.position - neigh_p2.position);
+        Vector3 n1 = Vector3.Cross(p3.position - neigh_p1.position, p4.position - neigh_p1.position).normalized;
+        Vector3 n2 = Vector3.Cross(p3.position - neigh_p2.position, p4.position - neigh_p2.position).normalized;
 
         // update theta
-        theta = Vector3.Angle(n1, n2);
+        theta = getAngle(n1, n2);
 
         // 4 angle in 2 faces
-        float alpha3_14 = Vector3.Angle(p3.position - neigh_p1.position, p3.position - p4.position);
-        float alpha3_42 = Vector3.Angle(p3.position - p4.position, p3.position - neigh_p2.position);
-        float alpha4_31 = Vector3.Angle(p4.position - p3.position, p4.position - neigh_p1.position);
-        float alpha4_23 = Vector3.Angle(p4.position - neigh_p2.position, p4.position - p3.position);
+        float alpha3_14 = getAngle(p3.position - neigh_p1.position, p3.position - p4.position);
+        float alpha3_42 = getAngle(p3.position - p4.position, p3.position - neigh_p2.position);
+        float alpha4_31 = getAngle(p4.position - p3.position, p4.position - neigh_p1.position);
+        float alpha4_23 = getAngle(p4.position - neigh_p2.position, p4.position - p3.position);
+
 
         float k = -k_crease * (theta - theta_target);
 
@@ -182,9 +194,18 @@ public class Beam : MonoBehaviour
 
     public void updateF_dumping()
     {
-        // TBD
-        p3.F_dumping = Vector3.zero;
-        p4.F_dumping = Vector3.zero;
+        //previous defination
+        float zeta = 0.1f;     //0.01~0.5
+        float c = 2 * zeta * Mathf.Sqrt(k_axial*p3.mass);//mass=1
+
+        // get velocity 
+        // here simply use the other node of the beam as the neighbour node
+        Vector3 v3 = p3.vel;
+        Vector3 v4 = p4.vel;
+
+        //F_dumping
+        p3.F_dumping = c * (v4 - v3);
+        p4.F_dumping = c * (v3 - v4); 
 
         // 那个字母叫zeta
     }
@@ -235,6 +256,18 @@ public class Beam : MonoBehaviour
 
         return k1 * (n1 / h1) + k2 * (n2 / h2);
     }
+
+
+    public float getAngle(Vector3 v1, Vector3 v2)
+    {
+        float angle = Vector3.Angle(v1, v2);
+        while (angle < 0)
+            angle += 180f;
+        while (angle > 180f)
+            angle -= 180f;
+        return angle;
+    }
+
 
     /// <summary>
     /// 点到直线距离

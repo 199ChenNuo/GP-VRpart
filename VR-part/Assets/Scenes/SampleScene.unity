@@ -4653,6 +4653,13 @@ MonoBehaviour:
   m_Text: Option A
 --- !u!222 &1998882074
 CanvasRenderer:
+  parser: {fileID: 0}
+  nodes: []
+  beams: []
+  faces: []
+  material: {fileID: 2100000, guid: c283dcd048b71944c853afbf2337c029, type: 2}
+--- !u!4 &432165752
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}

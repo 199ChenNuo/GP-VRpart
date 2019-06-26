@@ -13,18 +13,23 @@ public class Node : MonoBehaviour
     public Vector3 F_face = new Vector3();
     public Vector3 F_dumping = new Vector3();
 
-    public float F_total;
-
     public Vector3 vel = new Vector3();
     public Vector3 position = new Vector3();
     public float mass = 1f;
     public float deltaT = 0.01f;
+
+    public float F_total;
 
     // for debug
     public GameObject sphere;
     public GameObject lineobj;
     public LineRenderer line;
 
+    public void Clear()
+    {
+        Destroy(sphere);
+        Destroy(lineobj);
+    }
 
     public void AddBeam(Beam beam)
     {
@@ -39,6 +44,7 @@ public class Node : MonoBehaviour
         // for debug
         // node visualization
         sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        
         sphere.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
         sphere.transform.position = pos;
 
@@ -59,12 +65,19 @@ public class Node : MonoBehaviour
 
     public void updateF_axial()
     {
-        this.F_axial = Vector3.zero;
         for(int i=0; i<beams.Count; ++i)
         {
             Beam b = beams[i];
             this.F_axial += b.getF(this);
         }
+    }
+
+    public void ClearF()
+    {
+        F_axial = Vector3.zero;
+        F_dumping = Vector3.zero;
+        F_crease = Vector3.zero;
+        F_face = Vector3.zero;
     }
 
     public void updateVel()
@@ -73,6 +86,9 @@ public class Node : MonoBehaviour
         F_total = F.sqrMagnitude;
         Vector3 a = F / mass;
         vel += a * deltaT;
+        // Debug.Log("====== node: " + index + " ======");
+        // Debug.Log("F_crease: " + F_crease.ToString());
+
     }
 
     public void updatePosition()

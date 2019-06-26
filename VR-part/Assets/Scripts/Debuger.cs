@@ -55,12 +55,10 @@ public class Debuger
         foreach (Beam beam in beams)
         {
             string log = "Beam " + beam.index + "\n";
-            log += "\tfrom [Node " + beam.n1.index + "] to [Node " + beam.n2.index + "]\n";
-            log += "\tangle: " + beam.angle.ToString();
-            log += "\ttype: " + types[(int)beam.type];
+            log += "\tfrom [Node " + beam.p3.index + "] to [Node " + beam.p4.index + "]\n";
+            log += "\tangle: " + beam.theta.ToString();
+            log += "\ttype: " + types[(int)beam.type];            
             log += "\n";
-            log += "\tneighbor verts: [p1 " + beam.neigh_p1.index + "]  [p2 " + beam.neigh_p2.index + "]\n";
-           
             Debug.Log(log);
         }
     }

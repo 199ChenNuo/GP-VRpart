@@ -9,6 +9,7 @@ public class MeshController : MonoBehaviour
     public Material material;
     public Shader vertShader;
     public Shader normalShader;
+    public Shader standardShader;
 
     public enum Type{
         Material,
@@ -36,7 +37,7 @@ public class MeshController : MonoBehaviour
         meshfilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
         meshRenderer.material = material;
-        mesh = new Mesh();
+        
     }
     void Start()
     {
@@ -45,6 +46,7 @@ public class MeshController : MonoBehaviour
 
     public void CreateMesh(List<Vector3> verts, List<int> triangles)
     {
+        mesh = new Mesh();
         colors = new List<Color>(verts.Count);
 
         mesh.SetVertices(verts);
@@ -63,7 +65,10 @@ public class MeshController : MonoBehaviour
         {
             ForceVisulization(forces);
         }
-
+        else
+        {
+            material.shader = standardShader;
+        }
         mesh.SetVertices(verts);
         mesh.RecalculateNormals();
         meshfilter.mesh = mesh;        

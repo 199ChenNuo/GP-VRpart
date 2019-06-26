@@ -7,6 +7,7 @@ public class Face : MonoBehaviour
     // ==============================================
     // attributes
     // ==============================================
+
     // index of this face
     public long index;
 
@@ -26,12 +27,18 @@ public class Face : MonoBehaviour
     //      the order should related to nodes[]
     public List<float> alphas = new List<float>();
 
+    // draw face
+    public Material material;
+    public List<Vector3> vertices = new List<Vector3>();
+    private MeshRenderer meshRenderer;
+    private MeshFilter meshFilter;
+
     // normal vector of this face
     public Vector3 n;
 
     // ==============================================
     // functions: called by EventController
-    //              update F_face and F_dumping for nodes
+    //              update F_face for nodes
     // ==============================================
     public void updateF_face()
     {
@@ -92,15 +99,18 @@ public class Face : MonoBehaviour
             // n2: p3 -> p2
             Vector3 n2 = nodes[i].position - nodes[(i + 1) % 3].position;
 
-
+            /*
             Debug.Log("n1: " + n1.ToString());
             Debug.Log("n2: " + n2.ToString());
             Debug.Log("angle: " + Vector3.Angle(n1, n2));
+            */
 
             alpha_0s.Add(Vector3.Angle(n1, n2));
             alphas.Add(alpha_0s[i]);
 
+            /*
             Debug.Log("alpha0_s: " + alpha_0s.ToString());
+            */
         }
     }
 
@@ -170,6 +180,47 @@ public class Face : MonoBehaviour
         Vector3 numerator = Vector3.Cross(n, p3 - p2);
         float denominator = Vector3.Distance(p3, p2);
         return -numerator / (denominator * denominator);
+    }
+
+    [ContextMenu("Draw")]
+    public void Draw()
+    {
+        updateVertives();
+        Vector2[] vertices2D = new Vector2[vertices.Count];
+        Vector3[] vertices3D = new Vector3[vertices.Count];
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            // Vector3 vertice = vertices[i];
+            vertices2D[i] = new Vector2(vertices[i].x, vertices[i].y);
+            vertices3D[i] = vertices[i];
+        }
+
+        Triangulator tr = new Triangulator(vertices2D);
+        int[] triangles = tr.Triangulate();
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices3D;
+        mesh.triangles = triangles;
+
+        if (meshRenderer == null)
+        {
+            meshRenderer = gameObject.GetOrAddComponent<MeshRenderer>();
+        }
+        meshRenderer.material = material;
+        if (meshFilter == null)
+        {
+            meshFilter = gameObject.GetOrAddComponent<MeshFilter>();
+        }
+        meshFilter.mesh = mesh;
+    }
+
+    public void updateVertives()
+    {
+        vertices.Clear();
+        for(int i=0; i<nodes.Count; ++i)
+        {
+            vertices.Add(nodes[i].position);
+        }
     }
 
 }

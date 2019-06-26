@@ -42,7 +42,6 @@ public class EventController : MonoBehaviour
         // 计算 F_dumping
         for(int i=0; i<beams.Count; ++i)
         {
-            // TBD
             beams[i].updateF_crease();
             beams[i].updateF_dumping();
         }
@@ -50,7 +49,6 @@ public class EventController : MonoBehaviour
         // 计算 F_face
         for(int i=0; i<faces.Count; ++i)
         {
-            // TBD
             faces[i].updateF_face();
         }
 
@@ -60,7 +58,6 @@ public class EventController : MonoBehaviour
         {
             nodes[i].updateVel();
             nodes[i].updatePosition();
-            // vertices.Add(nodes[i].position);
         }
 
         // 更新Beam长度

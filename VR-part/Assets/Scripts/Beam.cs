@@ -173,11 +173,19 @@ public class Beam : MonoBehaviour
         float h2 = DisPoint2Line(neigh_p2.position, p3.position, p4.position);
 
         // normal of 2 faces
-        Vector3 n1 = Vector3.Cross(p3.position - neigh_p1.position, p4.position - neigh_p1.position).normalized;
-        Vector3 n2 = Vector3.Cross(p3.position - neigh_p2.position, p4.position - neigh_p2.position).normalized;
-
+        // Vector3 n1 = Vector3.Cross(p3.position - neigh_p1.position, p4.position - neigh_p1.position).normalized;
+        // Vector3 n2 = Vector3.Cross(p3.position - neigh_p2.position, p4.position - neigh_p2.position).normalized;
+        Vector3 n1 = Vector3.Cross(p3.position - neigh_p1.position, p4.position - neigh_p1.position);
+        Vector3 n2 = Vector3.Cross(p3.position - neigh_p2.position, p4.position - neigh_p2.position);
+        
         // update theta
-        theta = getAngle(n1, n2);
+        float angle = getAngle(n1, n2);
+        if (this.type == Type.Mountain)
+            theta = rounddown(angle);
+        else if (this.type == Type.Valley)
+            theta = roundup(angle);
+        else
+            return;
 
         // 4 angle in 2 faces
         float alpha3_14 = getAngle(p3.position - neigh_p1.position, p3.position - p4.position);
@@ -214,6 +222,12 @@ public class Beam : MonoBehaviour
 
     public void updateL()
     {
+        float tmp = Vector3.Distance(p3.position, p4.position);
+        // l = 
+        if(tmp-l_0 > 0.01*l_0 || l - tmp > 0.01 * l_0)
+        {
+            // reset node position
+        }
         l = Vector3.Distance(p3.position, p4.position);
     }
 
@@ -223,12 +237,25 @@ public class Beam : MonoBehaviour
 
     public Vector3 getODE1(Vector3 n1, float h1)
     {
-        return n1 / h1;
+        Vector3 tmp = n1 / h1;
+        return tmp;
+
+    }
+
+    public float round(float f)
+    {
+        if (f < -0.5)
+            return -0.5f;
+        if (f > 0.5)
+            return 0.5f;
+        return f;
     }
 
     public Vector3 getODE2(Vector3 n2, float h2)
     {
-        return n2 / h2;
+        Vector3 tmp = n2 / h2;
+        return tmp;
+
     }
 
     public Vector3 getODE3(Vector3 n1, Vector3 n2, float h1, float h2,
@@ -242,7 +269,9 @@ public class Beam : MonoBehaviour
         float k1 = -cot4_31 / (cot3_14 + cot4_31);
         float k2 = -cot4_23 / (cot3_42 + cot4_23);
 
-        return k1 * (n1 / h1) + k2 * (n2 / h2);
+        Vector3 tmp = k1 * (n1 / h1) + k2 * (n2 / h2);
+        return tmp;
+
     }
 
     public Vector3 getODE4(Vector3 n1, Vector3 n2, float h1, float h2,
@@ -256,7 +285,9 @@ public class Beam : MonoBehaviour
         float k1 = -cot3_14 / (cot3_14 + cot4_31);
         float k2 = -cot3_42 / (cot3_42 + cot4_23);
 
-        return k1 * (n1 / h1) + k2 * (n2 / h2);
+        Vector3 tmp = k1 * (n1 / h1) + k2 * (n2 / h2);
+        return tmp;
+
     }
 
     public float getAngle(Vector3 v1, Vector3 v2)
@@ -284,4 +315,23 @@ public class Beam : MonoBehaviour
         float dis = Mathf.Sqrt(Mathf.Pow(Vector3.Magnitude(vec1), 2) - Mathf.Pow(Vector3.Magnitude(vecProj), 2));
         return dis;
     }
+
+    public float rounddown(float a)
+    {
+        while (a > 0)
+            a -= 180;
+        return a;
+    }
+
+    public float roundup(float a)
+    {
+        while (a < 0)
+            a += 180;
+        if (a == 180)
+            return 0;
+        return a;
+    }
 }
+
+
+

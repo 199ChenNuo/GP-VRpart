@@ -51,7 +51,7 @@ public class Face : MonoBehaviour
         // update normal vector of this face
         updateN();
         // remove previous f_face of nodes
-        clearF_face();
+        // clearF_face();
 
         for(int i=0; i<3; ++i)
         {
@@ -105,7 +105,7 @@ public class Face : MonoBehaviour
             Debug.Log("angle: " + Vector3.Angle(n1, n2));
             */
 
-            alpha_0s.Add(Vector3.Angle(n1, n2));
+            alpha_0s.Add(Vector3.Angle(n2, n1));
             alphas.Add(alpha_0s[i]);
 
             /*
@@ -131,7 +131,7 @@ public class Face : MonoBehaviour
             // n2: p3 -> p2
             Vector3 n2 = nodes[i].position - nodes[(i + 1) % 3].position;
             // alpha[i]: angle from n1 point to n2
-            alphas[i] = Vector3.Angle(n1, n2);
+            alphas[i] = Vector3.Angle(n2, n1);
         }
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Parser : MonoBehaviour
 {
-    public string filename = "Assets/Resources/FOLD/flappingBird.fold";
+    public string filename = "Assets/Resources/FOLD/simpleVertex.fold";
     public List<Node> nodes = new List<Node>();
     public List<Beam> beams = new List<Beam>();
     public List<Face> faces = new List<Face>();
@@ -63,18 +63,20 @@ public class Parser : MonoBehaviour
             nodes[n2].AddBeam(beam);
 
             // face和face交界处的beam的同面相邻点
-            if (beam.type == Beam.Type.Mountain || beam.type == Beam.Type.Valley)
+            string key1 = n1.ToString() + "," + n2.ToString();
+            if (dics.ContainsKey(key1))
             {
-                int p1 = dics[n1.ToString() + "," + n2.ToString()];
-                int p2 = dics[n2.ToString() + "," + n1.ToString()];
-                
+                int p1 = dics[key1];
                 beam.neigh_p1 = nodes[p1];
+            }
+
+            string key2 = n2.ToString() + "," + n1.ToString();
+            if (dics.ContainsKey(key2))
+            {
+                int p2 = dics[key2];
                 beam.neigh_p2 = nodes[p2];
+            }
 
-                // Debug.Log("beam.p1:" + beam.neigh_p1.position.ToString());
-                // Debug.Log("beam.p2:" + beam.neigh_p2.position.ToString());
-
-            }         
 
             beams.Add(beam);
         }

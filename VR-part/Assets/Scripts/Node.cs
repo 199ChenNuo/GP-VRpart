@@ -40,6 +40,11 @@ public class Node : MonoBehaviour
         
         sphere.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
         sphere.transform.position = pos;
+        if(index == 0)
+            sphere.GetComponent<MeshRenderer>().material.color = Color.red;
+        if (index == 3)
+            sphere.GetComponent<MeshRenderer>().material.color = Color.blue;
+
 
         // for debug
         // beam visualization
@@ -61,7 +66,7 @@ public class Node : MonoBehaviour
         for(int i=0; i<beams.Count; ++i)
         {
             Beam b = beams[i];
-            this.F_axial += b.getF(this);
+            F_axial += b.getF(this);
         }
     }
 
@@ -78,8 +83,12 @@ public class Node : MonoBehaviour
         Vector3 F = F_axial + F_crease + F_dumping + F_face;
         Vector3 a = F / mass;
         vel += a * deltaT;
-        // Debug.Log("====== node: " + index + " ======");
-        // Debug.Log("F_crease: " + F_crease.ToString());
+
+        Debug.Log("====== node: " + index + " ======");
+        Debug.Log("F_crease: " + F_crease.ToString());
+        Debug.Log("F_axial: " + F_axial.ToString());
+        Debug.Log("F_face: " + F_face.ToString());
+        Debug.Log("F_dumping" + F_dumping.ToString());
 
     }
 

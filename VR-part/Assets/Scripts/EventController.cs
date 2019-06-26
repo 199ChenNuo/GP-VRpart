@@ -16,7 +16,7 @@ public class EventController : MonoBehaviour
 
     // public Material material;
     public MeshController meshController;
-    public List<Vector3> vertices;
+    private List<Vector3> vertices;
     private List<float> forces;
 
 
@@ -42,20 +42,7 @@ public class EventController : MonoBehaviour
     {
 
         parsedone = false;
-        if(parser != null)
-
-        // 计算 F_axial
-        for(int i=0; i<nodes.Count; ++i)
-        {
-            // 顺便把上一次update计算的各种力清空
-            nodes[i].ClearF();
-            nodes[i].updateF_axial();
-        }
-
-        // 计算 F_crease
-        // 计算 F_dumping
-        for(int i=0; i<beams.Count; ++i)
-        {
+        if(parser != null) { 
             parser.Clear();
         }
         else
@@ -110,7 +97,6 @@ public class EventController : MonoBehaviour
             }
 
             // 更新Node位置及速度
-            // vertices.Clear();
             vertices.Clear();
             forces.Clear();
             for (int i = 0; i < nodes.Count; ++i)
@@ -130,12 +116,7 @@ public class EventController : MonoBehaviour
 
             // 更新Face
             // 有点问题 TBD
-            /*
-            for(int i=0; i<faces.Count; ++i)
-            {
-                // faces[i].Draw();
-            }
-            */
+
             meshController.UpdateMesh(vertices, forces);
         }
         

@@ -91,14 +91,11 @@ public class Beam : MonoBehaviour
     }
 
     public void SetTheta(float a)
+
     {
-        if (this.type == Type.Mountain)
-            theta = a > 0 ? a - 180f : a;
-        else if (this.type == Type.Valley)
-            theta = a > 0 ? a : a + 180f;
-        else
-            theta = 0;
+        theta = a;
     }
+
 
     public void SetThetaTarget(float a)
     {
@@ -192,6 +189,7 @@ public class Beam : MonoBehaviour
         float alpha3_42 = getAngle(p3.position - p4.position, p3.position - neigh_p2.position);
         float alpha4_31 = getAngle(p4.position - p3.position, p4.position - neigh_p1.position);
         float alpha4_23 = getAngle(p4.position - neigh_p2.position, p4.position - p3.position);
+
 
         float k = -k_crease * (theta - theta_target);
 
@@ -290,6 +288,7 @@ public class Beam : MonoBehaviour
 
     }
 
+
     public float getAngle(Vector3 v1, Vector3 v2)
     {
         float angle = Vector3.Angle(v1, v2);
@@ -299,6 +298,7 @@ public class Beam : MonoBehaviour
             angle -= 180f;
         return angle;
     }
+
 
     /// <summary>
     /// 点到直线距离

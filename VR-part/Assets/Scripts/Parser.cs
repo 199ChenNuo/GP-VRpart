@@ -2,18 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Parser : MonoBehaviour
+public class Parser 
 {
-    public string filename = "Assets/Resources/FOLD/simpleVertex.fold";
+
+    public string filename = "Assets/Resources/FOLD/Origami/flappingBird.fold";
+
     public List<Node> nodes = new List<Node>();
     public List<Beam> beams = new List<Beam>();
     public List<Face> faces = new List<Face>();
 
+    // for draw Mesh
+    public List<Vector3> verts;
+    public List<int> triangles;
+
     private FOLD fold;
     private Debuger debuger = new Debuger();
 
+    public void Clear()
+    {
+        foreach (Node n in nodes)
+        {
+            n.Clear();
+        }
+        nodes.Clear();
+        beams.Clear();
+        faces.Clear();
+        verts.Clear();
+        triangles.Clear();
+    }
+
     // Start is called before the first frame update
-     public void Parse()
+    public void Parse()
     {
         // Step 1: .fold -> FOLD
         fold = new FOLD();
@@ -22,7 +41,7 @@ public class Parser : MonoBehaviour
         // Step 2: FOLD -> Node/Beam/Face
 
         // parse Nodes
-        List<Vector3> verts = fold.vertices_coords;
+        verts = fold.vertices_coords;
         for (int i = 0; i < verts.Count; i++)
         {
             Vector3 coord = verts[i];
@@ -38,12 +57,11 @@ public class Parser : MonoBehaviour
         List<string> edges_types = fold.edges_types;
         List<float> edges_foldAngles = fold.edges_foldAngles;
         Dictionary<string, int> dics = fold.edges_neighbor_verts;
-        for(int i = 0; i < edges_verts.Count; i++)
+
+        for (int i = 0; i < edges_verts.Count; i++)
         {
             Beam beam = new Beam();
             beam.SetIndex(i);
-            
-
 
             int n1 = edges_verts[i].x;
             int n2 = edges_verts[i].y;
@@ -52,6 +70,7 @@ public class Parser : MonoBehaviour
             // for visualization
             //beam.SetL(Vector3.Distance(nodes[n1].position, nodes[n2].position) * 1.1f);
             beam.SetL(Vector3.Distance(nodes[n1].position, nodes[n2].position));
+
             beam.SetL_0(beam.l);
             // set type should be after set l
             // because in set type, we will use l
@@ -83,7 +102,8 @@ public class Parser : MonoBehaviour
 
         // parse Faces
         List<Vector3Int> faces_verts = fold.faces_verts;
-        for(int i = 0; i < faces_verts.Count; i++)
+        triangles = new List<int>(faces_verts.Count * 3);
+        for (int i = 0; i < faces_verts.Count; i++)
         {
             Face face = new Face();
             face.SetIndex(i);
@@ -95,6 +115,10 @@ public class Parser : MonoBehaviour
             face.SetAlpha_0();
 
             faces.Add(face);
+
+            triangles.Add(ids.x);
+            triangles.Add(ids.y);
+            triangles.Add(ids.z);
         }
 
         Debug.Log("parse Success!");

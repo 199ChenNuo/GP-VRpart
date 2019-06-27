@@ -94,12 +94,13 @@ public class Node : MonoBehaviour
         Vector3 a = F / mass;
         vel += a * deltaT;
 
+        /*
         Debug.Log("====== node: " + index + " ======");
         Debug.Log("F_crease: " + F_crease.ToString());
         Debug.Log("F_axial: " + F_axial.ToString());
         Debug.Log("F_face: " + F_face.ToString());
         Debug.Log("F_dumping" + F_dumping.ToString());
-
+        */
     }
 
     public void updatePosition()

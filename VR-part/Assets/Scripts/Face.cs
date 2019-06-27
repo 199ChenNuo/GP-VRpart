@@ -44,8 +44,6 @@ public class Face : MonoBehaviour
         updateAlpha();
         // update normal vector of this face
         updateN();
-        // remove previous f_face of nodes
-        // clearF_face();
 
         for(int i=0; i<3; ++i)
         {
@@ -93,18 +91,12 @@ public class Face : MonoBehaviour
             // n2: p3 -> p2
             Vector3 n2 = nodes[i].position - nodes[(i + 1) % 3].position;
 
-            /*
-            Debug.Log("n1: " + n1.ToString());
-            Debug.Log("n2: " + n2.ToString());
-            Debug.Log("angle: " + Vector3.Angle(n1, n2));
-            */
+
 
             alpha_0s.Add(Vector3.Angle(n2, n1));
             alphas.Add(alpha_0s[i]);
 
-            /*
-            Debug.Log("alpha0_s: " + alpha_0s.ToString());
-            */
+
         }
     }
 
@@ -139,24 +131,13 @@ public class Face : MonoBehaviour
         n = Vector3.Cross(n1, n2);
     }
 
-    // set nodes's f_face to 0
-    public void clearF_face()
-    {
-        if (nodes.Count != 3)
-            return;
-        for(int i=0; i<3; ++i)
-        {
-            nodes[i].F_face = Vector3.zero;
-        }
-    }
-
     // p1 and alpha2_31
     public Vector3 getAlphaODE1(Vector3 n, Vector3 p1, Vector3 p2)
     {
         Vector3 numerator = Vector3.Cross(n, p1 - p2);
         float denominator = Vector3.Distance(p1, p2);
         Vector3 tmp = numerator / (denominator * denominator);
-        return new Vector3(1 / tmp.x, 1 / tmp.y, 1 / tmp.z);
+        return new Vector3(tmp.x == 0 ? 0 : 1 / tmp.x, tmp.y == 0 ? 0 : 1 / tmp.y, tmp.z == 0 ? 0 : 1 / tmp.z);
     }
 
     // p2 and alpha2_31
@@ -167,7 +148,7 @@ public class Face : MonoBehaviour
         Vector3 numerator2 = Vector3.Cross(n, p3 - p2);
         float denominator2 = Vector3.Distance(p3, p2);
         Vector3 tmp = -numerator1 / (denominator1 * denominator1) + numerator2 / (denominator2 * denominator2);
-        return new Vector3(1 / tmp.x, 1 / tmp.y, 1 / tmp.z);
+        return new Vector3(tmp.x == 0 ? 0 : 1 / tmp.x, tmp.y == 0 ? 0 : 1 / tmp.y, tmp.z == 0 ? 0 : 1 / tmp.z);
     }
 
     // p3 and alpha2_31
@@ -176,7 +157,7 @@ public class Face : MonoBehaviour
         Vector3 numerator = Vector3.Cross(n, p3 - p2);
         float denominator = Vector3.Distance(p3, p2);
         Vector3 tmp = -numerator / (denominator * denominator);
-        return new Vector3(1 / tmp.x, 1 / tmp.y, 1 / tmp.z);
+        return new Vector3(tmp.x == 0 ? 0 : 1 / tmp.x, tmp.y == 0 ? 0 : 1 / tmp.y, tmp.z == 0 ? 0 : 1 / tmp.z);
     }
 
    

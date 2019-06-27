@@ -12,7 +12,7 @@ public class Beam : MonoBehaviour
     public long index;
 
     // pre-set attribute
-    public float k_axial = 0.7f;
+    public float k_axial;
     public float k_crease;
 
     public Node p3 = new Node();    // p3
@@ -36,6 +36,8 @@ public class Beam : MonoBehaviour
     public float l;
     // original length
     public float l_0;
+
+    private float EA = 20;
 
     // ==============================================
     // functions: set up beam
@@ -83,6 +85,7 @@ public class Beam : MonoBehaviour
     public void SetL_0(float _l_0)
     {
         l_0 = _l_0;
+        k_axial = EA / l_0;
     }
 
     public void SetIndex(long i)
@@ -148,10 +151,8 @@ public class Beam : MonoBehaviour
     public Vector3 getF(Node n)
     {
         // I_12 is the unit vector from node 1 to node 2
-        // and the ode for n1 is -I12, so here I just let I12 be 
-        // node n2 to node n1, and use I12 to calculate
-        Vector3 I12 = (p3.position - p4.position).normalized;
-        if (n == p4)
+        Vector3 I12 = (p4.position - p3.position).normalized;
+        if (n == p3)
         {
             I12 = -I12;
         }
@@ -176,13 +177,24 @@ public class Beam : MonoBehaviour
         Vector3 n2 = Vector3.Cross(p3.position - neigh_p2.position, p4.position - neigh_p2.position);
         
         // update theta
-        float angle = getAngle(n1, n2);
+        float angle = 180-getAngle(n1, n2);
         if (this.type == Type.Mountain)
+        {
             theta = rounddown(angle);
+
+        }
         else if (this.type == Type.Valley)
+        {
             theta = roundup(angle);
+
+        }
+        else if (this.type == Type.Facet)
+        {
+            theta = angle;
+        }
         else
             return;
+
 
         // 4 angle in 2 faces
         float alpha3_14 = getAngle(p3.position - neigh_p1.position, p3.position - p4.position);
@@ -212,8 +224,8 @@ public class Beam : MonoBehaviour
         Vector3 v4 = p4.vel;
 
         //F_dumping
-        p3.F_dumping = c * (v4 - v3);
-        p4.F_dumping = c * (v3 - v4); 
+        p3.F_dumping += c * (v4 - v3);
+        p4.F_dumping += c * (v3 - v4); 
 
         // 那个字母叫zeta
     }
@@ -318,17 +330,15 @@ public class Beam : MonoBehaviour
 
     public float rounddown(float a)
     {
-        while (a > 0)
+        while (a >= 0)
             a -= 180;
         return a;
     }
 
     public float roundup(float a)
     {
-        while (a < 0)
+        while (a <= 0)
             a += 180;
-        if (a == 180)
-            return 0;
         return a;
     }
 }

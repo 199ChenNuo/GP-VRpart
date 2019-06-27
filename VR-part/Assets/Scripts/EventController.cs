@@ -19,6 +19,8 @@ public class EventController : MonoBehaviour
     private List<Vector3> vertices;
     private List<float> forces;
 
+    private int count = 0;
+
 
     private bool parsedone = false;
 
@@ -72,7 +74,6 @@ public class EventController : MonoBehaviour
     {
         if (parsedone)
         {
-
               // 计算 F_axial
             for (int i = 0; i < nodes.Count; ++i)
             {
@@ -99,13 +100,14 @@ public class EventController : MonoBehaviour
             }
 
             // 更新Node位置及速度
+
+
             vertices.Clear();
             forces.Clear();
             for (int i = 0; i < nodes.Count; ++i)
             {
                 nodes[i].updateVel();
                 nodes[i].updatePosition();
-                // vertices.Add(nodes[i].position);
                 vertices.Add(nodes[i].position);
                 forces.Add(nodes[i].F_total);
             }
@@ -117,8 +119,6 @@ public class EventController : MonoBehaviour
             }
 
             // 更新Face
-            // 有点问题 TBD
-
             meshController.UpdateMesh(vertices, forces);
         }
 

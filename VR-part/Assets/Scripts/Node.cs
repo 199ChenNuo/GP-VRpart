@@ -90,7 +90,10 @@ public class Node : MonoBehaviour
     public void updateVel()
     {
         Vector3 F = F_axial + F_crease + F_dumping + F_face;
+        // Vector3 F = F_axial + F_crease;
         F_total = F.sqrMagnitude;
+        if (F_total > 200)
+            Debug.Log("oh no");
         Vector3 a = F / mass;
         vel += a * deltaT;
 

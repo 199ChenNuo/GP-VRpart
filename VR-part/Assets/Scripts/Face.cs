@@ -56,7 +56,7 @@ public class Face : MonoBehaviour
             //     p3: nodes[(i+1)%3].pos 
 
             // f_face for p1
-            float k = -k_face * (alphas[i] - alpha_0s[i]);
+            float k = -k_face * (alphas[i] - alpha_0s[i]) * Mathf.Deg2Rad;
             nodes[(i + 2) % 3].F_face += k * getAlphaODE1(n, nodes[(i + 2) % 3].position, nodes[i].position);
             // f_face for p2
             nodes[i].F_face += k * getAlphaODE2(n, nodes[(i + 2) % 3].position,
@@ -137,7 +137,7 @@ public class Face : MonoBehaviour
         Vector3 numerator = Vector3.Cross(n, p1 - p2);
         float denominator = Vector3.Distance(p1, p2);
         Vector3 tmp = numerator / (denominator * denominator);
-        return new Vector3(tmp.x == 0 ? 0 : 1 / tmp.x, tmp.y == 0 ? 0 : 1 / tmp.y, tmp.z == 0 ? 0 : 1 / tmp.z);
+        return new Vector3(Mathf.Abs(tmp.x)<0.01 ? 0 : 1 / tmp.x, Mathf.Abs(tmp.y) < 0.01 ? 0 : 1 / tmp.y, Mathf.Abs(tmp.z) < 0.01 ? 0 : 1 / tmp.z);
     }
 
     // p2 and alpha2_31
@@ -148,7 +148,7 @@ public class Face : MonoBehaviour
         Vector3 numerator2 = Vector3.Cross(n, p3 - p2);
         float denominator2 = Vector3.Distance(p3, p2);
         Vector3 tmp = -numerator1 / (denominator1 * denominator1) + numerator2 / (denominator2 * denominator2);
-        return new Vector3(tmp.x == 0 ? 0 : 1 / tmp.x, tmp.y == 0 ? 0 : 1 / tmp.y, tmp.z == 0 ? 0 : 1 / tmp.z);
+        return new Vector3(Mathf.Abs(tmp.x) < 0.01 ? 0 : 1 / tmp.x, Mathf.Abs(tmp.y) < 0.01 ? 0 : 1 / tmp.y, Mathf.Abs(tmp.z) < 0.01 ? 0 : 1 / tmp.z);
     }
 
     // p3 and alpha2_31
@@ -157,7 +157,7 @@ public class Face : MonoBehaviour
         Vector3 numerator = Vector3.Cross(n, p3 - p2);
         float denominator = Vector3.Distance(p3, p2);
         Vector3 tmp = -numerator / (denominator * denominator);
-        return new Vector3(tmp.x == 0 ? 0 : 1 / tmp.x, tmp.y == 0 ? 0 : 1 / tmp.y, tmp.z == 0 ? 0 : 1 / tmp.z);
+        return new Vector3(Mathf.Abs(tmp.x) < 0.01 ? 0 : 1 / tmp.x, Mathf.Abs(tmp.y) < 0.01 ? 0 : 1 / tmp.y, Mathf.Abs(tmp.z) < 0.01 ? 0 : 1 / tmp.z);
     }
 
    

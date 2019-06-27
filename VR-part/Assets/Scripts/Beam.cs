@@ -173,11 +173,11 @@ public class Beam : MonoBehaviour
         // normal of 2 faces
         // Vector3 n1 = Vector3.Cross(p3.position - neigh_p1.position, p4.position - neigh_p1.position).normalized;
         // Vector3 n2 = Vector3.Cross(p3.position - neigh_p2.position, p4.position - neigh_p2.position).normalized;
-        Vector3 n1 = Vector3.Cross(p3.position - neigh_p1.position, p4.position - neigh_p1.position);
-        Vector3 n2 = Vector3.Cross(p3.position - neigh_p2.position, p4.position - neigh_p2.position);
+        Vector3 n1 = Vector3.Cross(neigh_p1.position - p3.position, neigh_p1.position - p4.position);
+        Vector3 n2 = Vector3.Cross(neigh_p2.position - p4.position, neigh_p2.position - p3.position);
         
         // update theta
-        float angle = 180-getAngle(n1, n2);
+        float angle = getAngle(n1, n2);
         if (this.type == Type.Mountain)
         {
             theta = rounddown(angle);
@@ -203,8 +203,8 @@ public class Beam : MonoBehaviour
         float alpha4_23 = getAngle(p4.position - neigh_p2.position, p4.position - p3.position);
 
 
-        float k = -k_crease * (theta - theta_target);
-
+        float k = -k_crease * theta * Mathf.Deg2Rad;
+        // k *= 0.1f;
         // update F_crease for 4 beams
         neigh_p1.F_crease += k * getODE1(n1, h1);
         neigh_p2.F_crease += k * getODE2(n2, h2);
@@ -232,12 +232,6 @@ public class Beam : MonoBehaviour
 
     public void updateL()
     {
-        float tmp = Vector3.Distance(p3.position, p4.position);
-        // l = 
-        if(tmp-l_0 > 0.01*l_0 || l - tmp > 0.01 * l_0)
-        {
-            // reset node position
-        }
         l = Vector3.Distance(p3.position, p4.position);
     }
 
@@ -271,10 +265,10 @@ public class Beam : MonoBehaviour
     public Vector3 getODE3(Vector3 n1, Vector3 n2, float h1, float h2,
         float alpha4_31, float alpha3_14, float alpha4_23, float alpha3_42)
     {
-        float cot4_31 = 1 / Mathf.Tan(alpha4_31);
-        float cot3_14 = 1 / Mathf.Tan(alpha3_14);
-        float cot4_23 = 1 / Mathf.Tan(alpha4_23);
-        float cot3_42 = 1 / Mathf.Tan(alpha3_42);
+        float cot4_31 = alpha4_31 == 90 ? 0 : 1 / Mathf.Tan(alpha4_31 * Mathf.Deg2Rad);
+        float cot3_14 = alpha3_14 == 90 ? 0 : 1 / Mathf.Tan(alpha3_14 * Mathf.Deg2Rad);
+        float cot4_23 = alpha4_23 == 90 ? 0 : 1 / Mathf.Tan(alpha4_23 * Mathf.Deg2Rad);
+        float cot3_42 = alpha3_42 == 90 ? 0 : 1 / Mathf.Tan(alpha3_42 * Mathf.Deg2Rad);
 
         float k1 = -cot4_31 / (cot3_14 + cot4_31);
         float k2 = -cot4_23 / (cot3_42 + cot4_23);
@@ -287,10 +281,10 @@ public class Beam : MonoBehaviour
     public Vector3 getODE4(Vector3 n1, Vector3 n2, float h1, float h2,
         float alpha3_14, float alpha4_31, float alpha3_42, float alpha4_23)
     {
-        float cot3_14 = 1 / Mathf.Tan(alpha3_14);
-        float cot4_31 = 1 / Mathf.Tan(alpha4_31);
-        float cot3_42 = 1 / Mathf.Tan(alpha3_42);
-        float cot4_23 = 1 / Mathf.Tan(alpha4_23);
+        float cot3_14 = alpha3_14 == 90 ? 0 : 1 / Mathf.Tan(alpha3_14 * Mathf.Deg2Rad);
+        float cot4_31 = alpha4_31 == 90 ? 0 : 1 / Mathf.Tan(alpha4_31 * Mathf.Deg2Rad);
+        float cot3_42 = alpha3_42 == 90 ? 0 : 1 / Mathf.Tan(alpha3_42 * Mathf.Deg2Rad);
+        float cot4_23 = alpha4_23 == 90 ? 0 : 1 / Mathf.Tan(alpha4_23 * Mathf.Deg2Rad);
 
         float k1 = -cot3_14 / (cot3_14 + cot4_31);
         float k2 = -cot3_42 / (cot3_42 + cot4_23);
@@ -308,6 +302,22 @@ public class Beam : MonoBehaviour
             angle += 180f;
         while (angle > 180f)
             angle -= 180f;
+        if (Mathf.Abs(angle - 90) < 0.01)
+            angle = 90;
+        return angle;
+    }
+
+    public float initGetAngle(Vector3 v1, Vector3 v2)
+    {
+        float angle = Vector3.Angle(v1, v2);
+        while (angle < 0)
+            angle += 180f;
+        while (angle > 180f)
+            angle -= 180f;
+        if (Mathf.Abs(angle - 90) < 0.01)
+            angle = 90;
+        if (Mathf.Abs(angle - 45) < 0.01)
+            angle = 45;
         return angle;
     }
 
